@@ -20,20 +20,21 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/OrderRequest'
+              $ref: "#/components/schemas/OrderRequest"
       responses:
-        '201':
+        "201":
           description: Pedido criado com sucesso.
           content:
             application/json:
               schema:
                 type: object
                 properties:
-                  message: { type: string, example: "Pedido criado com sucesso!" }
+                  message:
+                    { type: string, example: "Pedido criado com sucesso!" }
                   numeroPedido: { type: string, example: "V10080015vdb-01" }
-        '400':
+        "400":
           description: Dados inválidos (ID duplicado).
-        '500':
+        "500":
           description: Erro interno do servidor.
 
   /order/{orderId}:
@@ -47,15 +48,15 @@ paths:
           schema: { type: string }
           description: O ID único do pedido a ser buscado.
       responses:
-        '200':
+        "200":
           description: Dados do pedido e seus itens.
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/OrderResponse'
-        '404':
+                $ref: "#/components/schemas/OrderResponse"
+        "404":
           description: Pedido não encontrado.
-        '500':
+        "500":
           description: Erro interno do servidor.
 
 components:
@@ -67,19 +68,24 @@ components:
         quantidadeItem: { type: integer, example: 1 }
         valorItem: { type: integer, example: 1000 }
       required: [idItem, quantidadeItem, valorItem]
-      
+
     OrderRequest:
       type: object
       properties:
         numeroPedido: { type: string, example: "V10080015vdb-01" }
         valorTotal: { type: integer, example: 10000 }
-        dataCriacao: { type: string, format: date-time, example: "2023-07-19T12:24:11.5299601+00:00" }
+        dataCriacao:
+          {
+            type: string,
+            format: date-time,
+            example: "2023-07-19T12:24:11.5299601+00:00",
+          }
         Items:
           type: array
           items:
-            $ref: '#/components/schemas/ItemDetails'
+            $ref: "#/components/schemas/ItemDetails"
       required: [numeroPedido, valorTotal, dataCriacao, Items]
-      
+
     OrderResponse:
       allOf:
-        - $ref: '#/components/schemas/OrderRequest'
+        - $ref: "#/components/schemas/OrderRequest"
