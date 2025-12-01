@@ -128,7 +128,7 @@ async function startServer() {
       const ordersResult = await query(ordersQuery);
 
       if (ordersResult.rows.length === 0) {
-        return res.status(400).json("Nenhum item encontrado");
+        return res.status(404).json("Nenhum item encontrado");
       }
 
       const itemsQuery = `SELECT * FROM Items`;
@@ -138,6 +138,7 @@ async function startServer() {
       // Mapear os items dos produtos
       const itemsMap = allItems.reduce((acc, item) => {
         const orderId = item.orderid;
+        // usando um acumulador vai pegando e adicionando os items ao pedido
         if (!acc[orderId]) {
           acc[orderId] = [];
         }

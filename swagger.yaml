@@ -33,7 +33,7 @@ paths:
                     { type: string, example: "Pedido criado com sucesso!" }
                   numeroPedido: { type: string, example: "V10080015vdb-01" }
         "400":
-          description: Dados inválidos (ID duplicado).
+          description: Dados do pedido incompletos ou itens ausentes.
         "500":
           description: Erro interno do servidor.
     get:
@@ -48,6 +48,8 @@ paths:
                   type: array
                   items:
                     $ref: "#/components/schemas/OrderResponse"
+          "404":
+            description: Nenhum item encontrado.
           "500":
             description: Erro interno do servidor
   
