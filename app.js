@@ -1,15 +1,19 @@
+import "dotenv/config";
 import express, { json } from "express";
 import swaggerUi from "swagger-ui-express";
 import swaggerDocument from "./swaggerConfig.js";
 import cors from "cors";
+import {testConn, initSchema} from "./db.js";
 
 const app = express();
-
 const PORT = 3000;
 
 app.use(cors())
 app.use(json());
 app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerDocument));
+
+testConn();
+initSchema();
 
 /** GET Method */
     /**
