@@ -1,22 +1,17 @@
 import swaggerJsdoc from "swagger-jsdoc";
+import fs from 'fs';
+import path from 'path';
+import yaml from 'js-yaml';
+
+const swaggerSpecPath = path.resolve(process.cwd(), 'swagger.yaml');
+
+const swaggerDefinition = yaml.load(fs.readFileSync(swaggerSpecPath, 'utf8'));
 
 const swaggerOptions = {
-  definition: {
-    openapi: "3.0.0",
-    info: {
-      title: "Api Teste Jitterbit",
-      version: "1.0.0",
-      description: "Api para teste técnico com express e swagger",
-    },
-    servers: [
-      {
-        url: "http://localhost:3000",
-        description: "local server"
-      },
-    ],
-  },
-  apis: ["./app.js"],
+    definition: swaggerDefinition,
+    apis: [], 
 };
 
 const swaggerDocs = swaggerJsdoc(swaggerOptions);
+
 export default swaggerDocs;

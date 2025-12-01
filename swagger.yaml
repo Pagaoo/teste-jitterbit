@@ -1,0 +1,85 @@
+openapi: 3.0.0
+info:
+  title: Api Teste Jitterbit
+  description: Api para teste técnico com express e swagger
+  version: 1.0.0
+servers:
+  - url: http://localhost:3000
+    description: Servidor Local
+tags:
+  - name: Pedidos
+    description: Operações relacionadas a pedidos (Order)
+
+paths:
+  /order:
+    post:
+      tags: [Pedidos]
+      summary: Cria um novo pedido e seus itens associados.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/OrderRequest'
+      responses:
+        '201':
+          description: Pedido criado com sucesso.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message: { type: string, example: "Pedido criado com sucesso!" }
+                  numeroPedido: { type: string, example: "V10080015vdb-01" }
+        '400':
+          description: Dados inválidos (ID duplicado).
+        '500':
+          description: Erro interno do servidor.
+
+  /order/{orderId}:
+    get:
+      tags: [Pedidos]
+      summary: Busca um pedido pelo seu ID (número do pedido).
+      parameters:
+        - in: path
+          name: orderId
+          required: true
+          schema: { type: string }
+          description: O ID único do pedido a ser buscado.
+      responses:
+        '200':
+          description: Dados do pedido e seus itens.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/OrderResponse'
+        '404':
+          description: Pedido não encontrado.
+        '500':
+          description: Erro interno do servidor.
+
+components:
+  schemas:
+    ItemDetails:
+      type: object
+      properties:
+        idItem: { type: string, example: "2434" }
+        quantidadeItem: { type: integer, example: 1 }
+        valorItem: { type: integer, example: 1000 }
+      required: [idItem, quantidadeItem, valorItem]
+      
+    OrderRequest:
+      type: object
+      properties:
+        numeroPedido: { type: string, example: "V10080015vdb-01" }
+        valorTotal: { type: integer, example: 10000 }
+        dataCriacao: { type: string, format: date-time, example: "2023-07-19T12:24:11.5299601+00:00" }
+        Items:
+          type: array
+          items:
+            $ref: '#/components/schemas/ItemDetails'
+      required: [numeroPedido, valorTotal, dataCriacao, Items]
+      
+    OrderResponse:
+      allOf:
+        - $ref: '#/components/schemas/OrderRequest'
