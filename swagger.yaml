@@ -72,6 +72,30 @@ paths:
           description: Pedido não encontrado.
         "500":
           description: Erro interno do servidor.
+    delete:
+      tags: [Pedidos]
+      summary: Deleta um pedido pelo ID associado
+      parameters:
+        - in: path
+          name: orderId
+          required: true
+          schema: {type: string}
+          description: ID único a ser buscado para deleção da entidade
+      responses:
+        "200":
+          description: Pedido deletado com sucesso
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Pedido com ID 3asdsa123 deletado com sucesso
+        "404":
+          description: Pedido não encontrado para exclusão
+        "500":
+          description: Erro interno do servidor
 
 components:
   schemas:

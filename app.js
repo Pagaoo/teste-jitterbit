@@ -167,6 +167,34 @@ async function startServer() {
     }
   });
 
+  app.delete("/order/:orderId", async (req, res) => {
+    const { orderId } = req.params;
+
+    try {
+      const deleteQuery = `
+        DELETE FROM "Order" 
+        WHERE "orderid" = $1;
+      `;
+      const result = await query(deleteQuery, [orderId]);
+
+      if (result.rowCount === 0) {
+        return res
+          .status(404)
+          .json({ error: "Pedido não encontrado para exclusão." });
+      }
+
+      // Os itens são deletados automaticamente devido à regra ON DELETE CASCADE no schema.
+      res.status(200).json({
+        message: `Pedido com ID ${orderId} deletado com sucesso.`,
+      });
+    } catch (error) {
+      console.error("Erro ao deletar o pedido:", error);
+      res
+        .status(500)
+        .json({ error: "Erro interno do servidor ao deletar o pedido." });
+    }
+  });
+
   app.listen(PORT, () => {
     console.log(`Servidor rodando na porta ${PORT}`);
     console.log(`Swagger rodando na url: http://localhost:${PORT}/api-docs`);
