@@ -36,7 +36,21 @@ paths:
           description: Dados inválidos (ID duplicado).
         "500":
           description: Erro interno do servidor.
-
+    get:
+        tags: [Pedidos]
+        summary: Busca todos os pedidos
+        responses:
+          "200":
+            description: Dados retornado com sucesso
+            content:
+              application/json:
+                schema:
+                  type: array
+                  items:
+                    $ref: "#/components/schemas/OrderResponse"
+          "500":
+            description: Erro interno do servidor
+  
   /order/{orderId}:
     get:
       tags: [Pedidos]

@@ -104,12 +104,12 @@ async function startServer() {
 
       const completeOrder = {
         numeroPedido: order.orderid,
-        valorTotal: order.value,
+        valorTotal: parseFloat(order.value),
         dataCriacao: order.creationdate,
         Items: itemsResult.rows.map((item) => ({
           idItem: item.productid,
           quantidadeItem: item.quantity,
-          valorItem: item.price,
+          valorItem: parseFloat(item.price),
         })),
       };
 
@@ -119,6 +119,51 @@ async function startServer() {
       res
         .status(500)
         .json({ error: "Erro interno do servidor ao buscar o pedido." });
+    }
+  });
+
+  app.get("/order", async (req, res) => {
+    try {
+      const ordersQuery = `SELECT * FROM "Order" ORDER BY "creationdate" DESC`;
+      const ordersResult = await query(ordersQuery);
+
+      if (ordersResult.rows.length === 0) {
+        return res.status(400).json("Nenhum item encontrado");
+      }
+
+      const itemsQuery = `SELECT * FROM Items`;
+      const itemsResult = await query(itemsQuery);
+      const allItems = itemsResult.rows;
+
+      // Mapear os items dos produtos
+      const itemsMap = allItems.reduce((acc, item) => {
+        const orderId = item.orderid;
+        if (!acc[orderId]) {
+          acc[orderId] = [];
+        }
+        acc[orderId].push({
+          idItem: item.productid,
+          quantidadeItem: item.quantity,
+          valorItem: parseFloat(item.price),
+        });
+        return acc;
+      }, {});
+
+      const completeOrders = ordersResult.rows.map((order) => {
+        const orderId = order.orderid;
+        return {
+          numeroPedido: order.orderid,
+          valorTotal: parseFloat(order.value),
+          dataCriacao: order.creationdate,
+          Items: itemsMap[orderId] || [],
+        };
+      });
+
+      res.status(200).json(completeOrders);
+    } catch (err) {
+      res.status(500).json({
+        error: "Erro interno do servidor ao buscar todos os pedidos.",
+      });
     }
   });
 
