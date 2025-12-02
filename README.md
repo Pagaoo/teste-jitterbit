@@ -1,2 +1,2 @@
 Teste técnico Jitterbit
-<img src="URL_da_Imagem" alt="Texto Alternativo" width="500" height="300">
+<img src="imagens_readme/post_endpoint.png" alt="Texto Alternativo" width="500" height="300">
